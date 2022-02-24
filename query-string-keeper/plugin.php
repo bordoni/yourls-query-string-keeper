@@ -9,26 +9,29 @@ Author URI: http://www.jessewickizer.com
 */
 
 // Hook our custom function into the 'pre_redirect' event
-yourls_add_filter('redirect_location', 'qs_keeper_redirect' );
+yourls_add_filter( 'redirect_location', 'qs_keeper_redirect' );
 
 // Our custom function that will be triggered when the event occurs
 function qs_keeper_redirect($long_url) {
-
-    $queryString = $_SERVER['QUERY_STRING'];
+    $query_string = $_SERVER['QUERY_STRING'];
 	
 	//If original URL doesn't have a query string, return the unaltered original url.
-	if (!isset($queryString) || ($queryString == '')) {
+	if ( ! isset( $query_string ) || ( $query_string == '' ) ) {
 		return $long_url;
 	}
 
-	if (strpos($long_url, '?') !== false) {
-		$queryString = '&'.$queryString;
+	if ( strpos( $long_url, '?' ) !== false ) {
+		$query_string = '&'. $query_string;
+	} else {
+		$query_string = '?'. $query_string;
 	}
-	else {
-		$queryString = '?'.$queryString;
+
+	$frag = '';
+	// When there is a fragment we need to keep it separate.
+	if ( false !== strpos( $long_url, '#' ) ) {
+		$frag = explode( '#', $long_url );
+		$frag = end( $frag );
 	}
 	
-	return $long_url.$queryString;
+	return $long_url . $query_string . $frag;
 }
-
-?>
