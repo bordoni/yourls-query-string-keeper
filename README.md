@@ -1,41 +1,22 @@
-# Query String Keeper
-Query String Keeper plugin for [YOURLS](http://yourls.org) - tested on version 1.7.
+# Description
+By default, YOURLS ignores query string parameters on shorturls. For example:
 
+`https://sho.rt/1?param=value` redirects to `https://example.com/longurl/here`
 
-Description
------------
-Query String Keeper retains the query string added to the short url and adds it to the long url. If the long URL already includes a query string, it appends it following an ampersand (&) and if not, appends it to the long url following a question mark (?).  
+This plugin modifies this behavior so that the entire query string is appended onto the longurl. For example, with this plugin activated:
 
-Examples
---------
-Examples 1 & 2 use the following short & long URLs configured in YOURLS:  
-Short url = `http://sho.rt/keyword`  
-Long url  = `http://www.longurl.com`  
+`https://sho.rt/1?param=value` redirects to `https://example.com/longurl/here?param=value`
 
-_Example 1_  
-`http://sho.rt/keyword?foo=bar`  
-...becomes...  
-`http://www.longurl.com/?foo=bar`  
+## Blacklisted parameters
+In order to maintain compatibility with the internet at large, this plugin *does not* pass along Facebook's `fbclid` parameter if it is present. This parameter is known to cause some websites to erroneously generate a 404 Not Found error.
 
-_Example 2_  
-`http://sho.rt/keyword?123`  
-...becomes...  
-`http://www.longurl.com/?123`  
+If you'd like to modify this blacklist, please see the `ozh_kqs_yourls_add_query_arg()` function in `plugin.php`.
 
-Example 3 uses the following short & long URLs configured in YOURLS:  
-Short url = `http://sho.rt/keyword`  
-Long url  = `http://www.longurl.com?foo=bar`  
-_Example 3_  
-`http://sho.rt/keyword?zoo=car`  
-...becomes...  
-`http://www.longurl.com/?foo=bar&zoo=car`  
+# Installation
+1. In `/user/plugins`, create a new folder named `yourls-keep-query-string`.
+2. Drop these files in that directory.
+3. Go to the Plugins administration page (e.g. `https://sho.rt/admin/plugins.php`) and activate the plugin.
+4. Have fun!
 
-Installation
-------------
-1. Move query-string-keeper directory to the `/user/plugins` directory of the YOURLS installation.  
-2. Go to the Plugins administration page ( *eg* `http://sho.rt/admin/plugins.php` ) and activate the `Query String Keeper` plugin.  
-
-Other/References
-----------------
-This plugin adapted from the Query String Forward plugin by [llonchj](https://github.com/llonchj/yourls_plugins) which doesn't handle passing a single number as in `sho.rt/foo?123`.  
-The Append Query String plugin by [drockney](https://github.com/drockney/append-qs) works for those that want the query string to just be appended without the ? or & symbols.  
+# License
+Released under the [MIT License](https://opensource.org/licenses/MIT).
